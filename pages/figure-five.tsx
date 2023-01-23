@@ -4,7 +4,7 @@ import { Canvas, ReactThreeFiber, extend } from "@react-three/fiber";
 import { MapControls, Text } from '@react-three/drei';
 
 import styles from '../styles/figure-five.module.css'
-import { BufferGeometry, EllipseCurve, Line, LineBasicMaterial, Vector3 } from 'three';
+import { BufferGeometry, EllipseCurve, Euler, Line, LineBasicMaterial, Mesh, Vector3 } from 'three';
 import {Leva, useControls} from 'leva';
 
 extend({ Line_: Line });
@@ -17,8 +17,9 @@ declare global {
   }
 }
 
-const LABEL_LINES = 0x888888;
+const LABEL_LINES = 0xcccccc;
 const PRIMARY_LINES = 0x000000;
+const SECONDARY_LINES = 0x555555;
 
 function RealAxis() {
   const points = [];
@@ -26,7 +27,7 @@ function RealAxis() {
   points.push( new Vector3( 2.5, 0, 0 ) );
   
   const geometry = new BufferGeometry().setFromPoints(points);
-  const material = new LineBasicMaterial({ color: 0x555555 });
+  const material = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   return (
     <>
@@ -41,7 +42,7 @@ function ImaginaryAxis() {
   points.push(new Vector3(0, 2.5, 0));
   
   const geometry = new BufferGeometry().setFromPoints(points);
-  const material = new LineBasicMaterial({ color: 0x555555 });
+  const material = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   return (
     <>
@@ -91,7 +92,7 @@ function Phi(attributes:PhiAttributes) {
   points.push(new Vector3(x, y, 0));
 
   const geometry = new BufferGeometry().setFromPoints(points);
-  const material = new LineBasicMaterial({ color: 0x555555 });
+  const material = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   const arc = new EllipseCurve(
     0,
@@ -114,7 +115,7 @@ function Phi(attributes:PhiAttributes) {
   cosPhiPoints.push(new Vector3(Math.cos(φ), Math.sin(φ), 0));
 
   const cosPhiGeometry = new BufferGeometry().setFromPoints(cosPhiPoints);
-  const cosPhiMaterial = new LineBasicMaterial({ color: 0x555555 });
+  const cosPhiMaterial = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   // COS PHI Label
   const cosPhiLabelPoints = [];
@@ -130,7 +131,7 @@ function Phi(attributes:PhiAttributes) {
   sinPhiPoints.push(new Vector3(1.618, Math.sin(φ), 0));
 
   const sinPhiGeometry = new BufferGeometry().setFromPoints(sinPhiPoints);
-  const sinPhiMaterial = new LineBasicMaterial({ color: 0x555555 });
+  const sinPhiMaterial = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   // SIN PHI Label
   const sinPhiLabelPoints = [];
@@ -264,14 +265,14 @@ function U(attributes:UAttributes) {
   sqrtPointsA.push(new Vector3(0 + 1 * Math.cos(angle), u + 1 * Math.sin(angle), 0));
 
   const sqrtGeometryA = new BufferGeometry().setFromPoints(sqrtPointsA);
-  const sqrtMaterialA = new LineBasicMaterial({ color: 0x555555 });
+  const sqrtMaterialA = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   const sqrtPointsB = [];
   sqrtPointsB.push(new Vector3(-1, 0, 0));
   sqrtPointsB.push(new Vector3(-1 + (1 * Math.cos(angle)), 1 * Math.sin(angle), 0));
 
   const sqrtGeometryB = new BufferGeometry().setFromPoints(sqrtPointsB);
-  const sqrtMaterialB = new LineBasicMaterial({ color: 0x555555 });
+  const sqrtMaterialB = new LineBasicMaterial({ color: SECONDARY_LINES });
 
   const yAxisPoints = [];
   yAxisPoints.push(new Vector3(0, 0, 0));
@@ -303,64 +304,131 @@ function Labels(attributes:LabelsAttributes) {
   const sqrtX = (Math.cos(angle) + (-1 + Math.cos(angle))) / 2;
   const sqrtY = ((u + Math.sin(angle)) + Math.sin(angle)) / 2;
 
+  const reltionshipB = new EllipseCurve(
+    -1,
+    0,
+    .618,
+    .618,
+    0,
+    φ/2,
+    false,
+    0
+  );
+
+  const reltionshipBLabel = reltionshipB.getPoints(50);
+  const relationshipBVector = new Vector3(reltionshipBLabel[25].x, reltionshipBLabel[25].y, 0);
+
+  const reltionshipA = new EllipseCurve(
+    Math.cos(φ),
+    Math.sin(φ),
+    .618,
+    .618,
+    0 - Math.PI/2,
+    φ/2 - Math.PI/2,
+    false,
+    0
+  );
+
+  const reltionshipALabel = reltionshipA.getPoints(50);
+  const relationshipAVector = new Vector3(reltionshipALabel[25].x, reltionshipALabel[25].y, 0);
+
   return (
     <>
       <Text
-        color={0x555555}
+        color={SECONDARY_LINES}
         anchorX="center"
         anchorY="bottom"
         scale={new Vector3(.075, .075, 0)}
+        font="/RobotoSlab-Regular.ttf"
         position={new Vector3(0, 2.5, 0)}>
         Im
       </Text>
 
       <Text
-        color={0x555555}
+        color={SECONDARY_LINES}
         anchorX="left"
         anchorY="middle"
         scale={new Vector3(.075, .075, 0)}
+        font="/RobotoSlab-Regular.ttf"
         position={new Vector3(2.51, 0, 0)}>
         Re
       </Text>
 
       <Text
-        color={0x555555}
+        color={SECONDARY_LINES}
         anchorX="center"
         anchorY="middle"
         scale={new Vector3(.1, .1, 0)}
         outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
         position={new Vector3(1.618, Math.sin(φ)/2, 0)}>
-        sin( phi )
+        sin(φ)
       </Text>
 
       <Text
-        color={0x555555}
+        color={SECONDARY_LINES}
         anchorX="center"
         anchorY="middle"
         scale={new Vector3(.1, .1, 0)}
         outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
         position={new Vector3(Math.cos(φ)/2, -.618, 0)}>
-        cos( phi )
+        cos(φ)
       </Text>
 
       <Text
-        color={0x555555}
+        color={SECONDARY_LINES}
         anchorX="center"
         anchorY="middle"
         scale={new Vector3(.1, .1, 0)}
         outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
         position={new Vector3(sqrtX, sqrtY, 0)}>
-        sqrt( 1 + u^2 )
+        sqrt(1 + u²)
       </Text>
 
       <Text
-        color={0x555555}
+        color={SECONDARY_LINES}
         anchorX="center"
         anchorY="middle"
         scale={new Vector3(.1, .1, 0)}
         outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
         position={new Vector3(-.618, u/2, 0)}>
         u
+      </Text>
+
+      <Text
+        color={SECONDARY_LINES}
+        anchorX="center"
+        anchorY="middle"
+        scale={new Vector3(.1, .1, 0)}
+        outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
+        position={relationshipBVector}>
+        φ/2
+      </Text>
+
+      <Text
+        color={SECONDARY_LINES}
+        anchorX="center"
+        anchorY="middle"
+        scale={new Vector3(.1, .1, 0)}
+        outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
+        position={relationshipAVector}>
+        φ/2
+      </Text>
+
+      <Text
+        color={SECONDARY_LINES}
+        anchorX="center"
+        anchorY="middle"
+        scale={new Vector3(.075, .075, 0)}
+        outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
+        position={new Vector3(0, -1.618, 0)}>
+        R.J. Walker's geometric proof of the tangent half-angle formula on the unit circle.
       </Text>
     </>
   );
@@ -368,20 +436,12 @@ function Labels(attributes:LabelsAttributes) {
 
 function FigureFive({}) {
 
-  // const earthDiv = document.createElement("div");
-  // earthDiv.className = "label";
-  // earthDiv.textContent = "Earth";
-  // earthDiv.style.marginTop = "-1em";
-  // const earthLabel = new CSS2DObject(earthDiv);
-  // earthLabel.position.set(0, 2, 0);
-  // earth.add(earthLabel);
-
   const {φ} = useControls({
     φ: {
       value: Math.PI/4,
       label: "φ - phi",
       min: 0,
-      max: Math.PI,
+      max: Math.PI/2,
       step: 0.01
     }
   });
