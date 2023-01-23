@@ -76,18 +76,17 @@ function UnitCircle() {
 }
 
 type PhiAttributes = {
-  φ: number // Radians,
-  radius: number,
+  φ: number // Radians
 };
 
 function Phi(attributes:PhiAttributes) {
-  const {φ, radius} = attributes;
+  const {φ} = attributes;
 
   const points = [];
   points.push(new Vector3(0, 0, 0));
 
-  const x = radius * Math.cos(φ);
-  const y = radius * Math.sin(φ);
+  const x = 2 * Math.cos(φ);
+  const y = 2 * Math.sin(φ);
 
   points.push(new Vector3(x, y, 0));
 
@@ -97,8 +96,8 @@ function Phi(attributes:PhiAttributes) {
   const arc = new EllipseCurve(
     0,
     0,
-    radius,
-    radius,
+    2,
+    2,
     0,
     φ,
     false,
@@ -332,6 +331,20 @@ function Labels(attributes:LabelsAttributes) {
   const reltionshipALabel = reltionshipA.getPoints(50);
   const relationshipAVector = new Vector3(reltionshipALabel[25].x, reltionshipALabel[25].y, 0);
 
+  const arc = new EllipseCurve(
+    0,
+    0,
+    2,
+    2,
+    0,
+    φ,
+    false,
+    0
+  );
+
+  const arcPoints = arc.getPoints(50);
+  const phiLabelPoint = new Vector3(arcPoints[25].x, arcPoints[25].y, 0)
+
   return (
     <>
       <Text
@@ -424,6 +437,17 @@ function Labels(attributes:LabelsAttributes) {
         color={SECONDARY_LINES}
         anchorX="center"
         anchorY="middle"
+        scale={new Vector3(.1, .1, 0)}
+        outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
+        position={phiLabelPoint}>
+        φ
+      </Text>
+
+      <Text
+        color={SECONDARY_LINES}
+        anchorX="center"
+        anchorY="middle"
         scale={new Vector3(.075, .075, 0)}
         outlineColor={0xFFFFFF}
         font="/RobotoSlab-Regular.ttf"
@@ -448,7 +472,7 @@ function FigureFive({}) {
 
   return (
     <>
-      <Phi φ={φ} radius={2}></Phi>
+      <Phi φ={φ}></Phi>
       <U φ={φ}></U>
       <InnerAngles φ={φ}/>
       <UnitCircle></UnitCircle>
