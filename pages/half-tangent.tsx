@@ -177,7 +177,12 @@ type HalTangentAttributes = {
 }
 
 function HalfTangent(attributes:HalTangentAttributes) {
-  const { φ } = attributes;
+  let { φ } = attributes;
+
+  // Prevents divide by zero
+  if (φ === 0) {
+    φ = .00000000001;
+  }
 
   const o = new Vector2(0, 0);
   const p = circumferencePoint(o, 1, φ);
