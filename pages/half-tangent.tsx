@@ -116,11 +116,12 @@ function Point(attributes:PointAttributes) {
 type AngleAttributes = {
   origin: Vector2,
   angle: number,
-  radius: number
+  radius: number,
+  label: string
 }
 
 function Angle(attributes:AngleAttributes) {
-  const { origin, angle, radius } = attributes;
+  const { origin, angle, radius, label } = attributes;
 
   const curve = new EllipseCurve(
     origin.x,
@@ -138,7 +139,17 @@ function Angle(attributes:AngleAttributes) {
  
   return (
     <>
-      <line_ geometry={geometry} material={material}></line_>
+      <line_ geometry={geometry} material={material} />
+      <Text
+        color={SECONDARY_LINES}
+        anchorX="center"
+        anchorY="middle"
+        scale={new Vector3(.075, .075, 0)}
+        outlineColor={0xFFFFFF}
+        font="/RobotoSlab-Regular.ttf"
+        position={new Vector3(origin.x + radius * Math.cos(angle/2), origin.y + radius * Math.sin(angle/2))}>
+        {label}
+      </Text>
     </>
   );
 }
@@ -198,8 +209,8 @@ function HalfTangent(attributes:HalTangentAttributes) {
       <Segment start={b} end={p} />
       <Segment start={c} end={p} />
 
-      <Angle origin={o} angle={alpha} radius={.2}/>
-      <Angle origin={a} angle={beta} radius={.2}/>
+      <Angle origin={o} angle={alpha} radius={.2} label="β"/>
+      <Angle origin={a} angle={beta} radius={.2} label="α"/>
 
     </>
   );
