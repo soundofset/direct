@@ -221,7 +221,7 @@ export default function Home() {
   const {φ} = useControls({
     φ: {
       value: Math.PI/4,
-      label: "φ - phi",
+      label: "β - beta",
       min: 0,
       max: Math.PI,
       step: 0.01
