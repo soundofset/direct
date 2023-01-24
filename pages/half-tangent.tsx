@@ -205,6 +205,8 @@ function HalfTangent(attributes:HalTangentAttributes) {
 
       <Segment start={a} end={p} />
       <Segment start={o} end={p} />
+      <Segment start={o} end={e} />
+      <Segment start={o} end={c} />
       <Segment start={d} end={p} />
       <Segment start={b} end={p} />
       <Segment start={c} end={p} />
