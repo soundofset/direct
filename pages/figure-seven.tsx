@@ -337,7 +337,6 @@ function FigureSeven({s}:FigureSevenAttributes) {
       <Point position={B_prime} label="B'"></Point>
       <CircleCurve radius={abs_B} origin={O} start={0}  end={Math.PI}/>
 
-
       <Segment start={O} end={S}/>
       <Segment start={O} end={S_prime}/>
       <Segment start={O} end={B}/>
@@ -346,7 +345,7 @@ function FigureSeven({s}:FigureSevenAttributes) {
       <Segment start={O} end={new Vector2(0, B.x)}/>
 
       <RealAxisLabel width={S.x}/>
-      <ImaginaryAxisLabel height={S.y}/>
+      <ImaginaryAxisLabel height={B.x}/>
 
     </>
   );
